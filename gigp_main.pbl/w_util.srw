@@ -19953,8 +19953,8 @@ long backcolor = 67108864
 end type
 
 type cb_147 from commandbutton within w_util
-integer x = 1056
-integer y = 1300
+integer x = 1513
+integer y = 1316
 integer width = 343
 integer height = 100
 integer taborder = 330
