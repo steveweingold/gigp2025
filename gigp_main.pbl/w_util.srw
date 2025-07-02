@@ -1,6 +1,8 @@
 ﻿forward
 global type w_util from window
 end type
+type cb_147 from commandbutton within w_util
+end type
 type cb_146 from commandbutton within w_util
 end type
 type cb_145 from commandbutton within w_util
@@ -321,6 +323,7 @@ windowtype windowtype = response!
 long backcolor = 67108864
 string icon = "AppIcon!"
 boolean center = true
+cb_147 cb_147
 cb_146 cb_146
 cb_145 cb_145
 cb_144 cb_144
@@ -1112,6 +1115,7 @@ Return 1
 end function
 
 on w_util.create
+this.cb_147=create cb_147
 this.cb_146=create cb_146
 this.cb_145=create cb_145
 this.cb_144=create cb_144
@@ -1266,7 +1270,8 @@ this.cb_2=create cb_2
 this.gb_1=create gb_1
 this.dw_cfa=create dw_cfa
 this.gb_2=create gb_2
-this.Control[]={this.cb_146,&
+this.Control[]={this.cb_147,&
+this.cb_146,&
 this.cb_145,&
 this.cb_144,&
 this.cb_143,&
@@ -1423,6 +1428,7 @@ this.gb_2}
 end on
 
 on w_util.destroy
+destroy(this.cb_147)
 destroy(this.cb_146)
 destroy(this.cb_145)
 destroy(this.cb_144)
@@ -19944,5 +19950,20 @@ fontfamily fontfamily = swiss!
 string facename = "Arial"
 long textcolor = 33554432
 long backcolor = 67108864
+end type
+
+type cb_147 from commandbutton within w_util
+integer x = 1056
+integer y = 1300
+integer width = 343
+integer height = 100
+integer taborder = 330
+integer textsize = -8
+integer weight = 400
+fontcharset fontcharset = ansi!
+fontpitch fontpitch = variable!
+fontfamily fontfamily = swiss!
+string facename = "Arial"
+string text = "test"
 end type
 
