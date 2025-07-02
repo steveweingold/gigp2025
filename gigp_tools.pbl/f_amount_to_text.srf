@@ -1,0 +1,132 @@
+﻿global type f_amount_to_text from function_object
+end type
+
+forward prototypes
+global function string f_amount_to_text (decimal ad_amount)
+end prototypes
+
+global function string f_amount_to_text (decimal ad_amount);//**********************************************************************
+// Function: 		f_amount_to_text
+// 
+// Description: 	convert a numeric value to its equivalent in english 
+// 
+// Parameter(s): 	decimal ad_amount 
+//
+// Return Value: 	String
+//**********************************************************************
+
+String  	ls_Single[], ls_Ten[], ls_Teen[], ls_Mega[] 
+String  	ls_Hundred, ls_Word, ls_Total, ls_Char, ls_Temp, ls_Cents, ls_Amount 
+Integer 	li_Point 
+Long   	ll_Position 
+
+ls_Single	= { ' ONE',' TWO',' THREE',' FOUR',' FIVE',' SIX',' SEVEN',' EIGHT',' NINE' } 
+ls_Ten   	= { ' TEN',' TWENTY',' THIRTY',' FORTY',' FIFTY',' SIXTY','SEVENTY',' EIGHTY',' NINETY' } 
+ls_Teen  	= { ' TEN', ' ELEVEN',' TWELVE',' THIRTEEN',' FOURTEEN','FIFTEEN',' SIXTEEN',' SEVENTEEN',' EIGHTEEN',' NINETEEN' } 
+ls_Mega  	= { '','THOUSAND','MILLION','BILLION','TRILLION' } 
+ls_Hundred  = 'HUNDRED' 
+
+li_Point  = 1 
+
+//*******************************************************
+// Trim the amount 
+//*******************************************************
+
+ls_Amount = Trim(String(ad_Amount)) 
+
+ll_Position = Pos(ls_Amount,'.') 
+
+If (ll_Position > 0) THEN  // cents in the check! 
+ ls_Cents  = Mid(ls_Amount,ll_Position + 1,2) 
+ ls_Amount = Mid(ls_Amount,1,ll_Position - 1) 
+Else 
+ ls_Cents = '00' 
+END IF 
+
+//*******************************************************
+// Run a loop for the $$$ word, and chew it in bytes of 3.
+// 100's then 1000's, etc. 
+//*******************************************************
+
+Do while Len(ls_Amount) > 0 
+	
+ ls_Word = '' 
+ ls_Temp = Right(ls_Amount,3) 
+ 
+ Do While Len(ls_Temp) > 0 
+	
+  CHOOSE CASE Len(ls_Temp) 
+		
+   CASE 3 
+		
+    ls_Char = Mid(ls_Temp,1,1) 
+	 
+    If ls_Char <> '0' THEN 
+    	ls_Word += ls_Single[Integer(ls_Char)] + ' ' + ls_Hundred 
+    END IF 
+	 
+    ls_Temp = Mid(ls_Temp,2) 
+	 
+   CASE 2 
+		
+    ls_Char = Mid(ls_Temp,1,1) 
+	 
+    If ls_Char = '0' THEN 
+     ls_Temp = Mid(ls_Temp,2,1) 
+    Else 		
+     If ls_Char = '1' THEN // teen 
+     	ls_Word += ls_Teen[Integer(Mid(ls_Temp,2,1))+1] 
+      ls_Temp = '' 
+     Else 
+      ls_Word += ls_Ten[Integer(ls_Char)] 
+      ls_Temp = Mid(ls_Temp,2,1) 
+     END IF 
+    END IF 
+	 
+   CASE 1 
+		
+    ls_Char = Mid(ls_Temp,1,1) 
+	 
+    If ls_Char <> '0' THEN 
+    	ls_Word += ls_Single[Integer(ls_Char)] 
+    END IF 
+	 
+    ls_Temp = '' 
+	 
+  END CHOOSE 
+  
+ LOOP 
+ 
+ //*******************************************************
+ // clip finished $$$ off word 
+ //*******************************************************
+ 
+ ls_Amount = Mid(ls_Amount,1,Len(ls_Amount)-3) 
+ 
+ If Len(ls_Word) > 0 THEN 
+ 	ls_Total = RightTrim(ls_Word) + ' ' + ls_Mega[li_Point] + RightTrim(ls_Total) 
+ END IF 
+ 
+ li_Point++ 
+ 
+LOOP 
+
+//*******************************************************
+// Build the final $$$ to text phrase and return 
+//*******************************************************
+
+ls_Total = RightTrim(ls_Total) 
+
+IF Integer(ls_Amount) = 1 THEN 
+ ls_Total += ' DOLLAR and ' 
+ELSE 
+ ls_Total += ' DOLLARS and ' 
+END IF 
+
+ls_Total += ls_Cents + ' CENTS' 
+
+Return ls_Total 
+
+
+end function
+

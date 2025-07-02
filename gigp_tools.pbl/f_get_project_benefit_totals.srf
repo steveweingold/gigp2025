@@ -1,0 +1,69 @@
+﻿global type f_get_project_benefit_totals from function_object
+end type
+
+forward prototypes
+global function integer f_get_project_benefit_totals (long al_gigp, ref decimal ad_p, ref decimal ad_wqv, ref decimal ad_gallons, ref decimal ad_linft, ref decimal ad_acres)
+end prototypes
+
+global function integer f_get_project_benefit_totals (long al_gigp, ref decimal ad_p, ref decimal ad_wqv, ref decimal ad_gallons, ref decimal ad_linft, ref decimal ad_acres);string ls_syntax, error_syntaxfromSQL, errorCreate, ls_practice
+integer li_rtn
+long ll_ret, ll_row, ll_practice
+decimal ld_benefit
+n_ds lds_data
+
+//Make sure a GIGP id was passed in
+If al_gigp <= 0 or IsNull(al_gigp) Then 
+	Return -1
+End If
+
+//Get P value
+select metric_value
+into :ad_p
+from gigp_project_metrics
+where gigp_id = :al_gigp
+and ref_code = 'PINCHES';
+
+If IsNull(ad_p) then ad_p = 0
+
+ad_linft = 0
+ad_acres = 0
+ad_gallons = 0
+ad_wqv = 0
+
+//Loop through all design calc practices for the GIGP Id and sum the individual WQv values
+ls_syntax = sqlca.SyntaxFromSQL('select * from gigp_design_calcs where gigp_id = ' + String(al_gigp), 'Style(Type=Form)', error_syntaxfromSQL)
+lds_data = CREATE n_ds
+lds_data.CREATE(ls_syntax, errorCreate)
+lds_data.SetTransObject(SQLCA)
+
+ll_ret = lds_data.Retrieve(al_gigp)
+
+For ll_row = 1 to ll_ret
+	ll_practice = lds_data.GetItemNumber(ll_row, 'design_calc_id')
+	ls_practice = lds_data.GetItemString(ll_row, 'practice_type')
+	
+	ld_benefit = 0
+	ld_benefit = f_get_project_benefit_value(ll_practice)
+	
+	If ld_benefit > 0 Then
+		Choose Case ls_practice
+			Case 'DesCalcStreamLt'
+				ad_linft += ld_benefit
+			
+			Case 'DesCalcWetland'
+				ad_acres += ld_benefit
+					
+			Case 'DesCalcStormHar'
+				ad_gallons += ld_benefit
+					
+			Case Else
+				ad_wqv += ld_benefit
+				
+		End Choose
+	End If
+	
+Next
+
+Return 1
+end function
+

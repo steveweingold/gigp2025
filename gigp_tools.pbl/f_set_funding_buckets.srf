@@ -1,0 +1,147 @@
+﻿global type f_set_funding_buckets from function_object
+end type
+
+forward prototypes
+global function integer f_set_funding_buckets (long al_disburse)
+end prototypes
+
+global function integer f_set_funding_buckets (long al_disburse);integer li_return = 1
+integer li_override
+string ls_program
+long ll_gigp, ll_count
+decimal ld_disb, ld_running_total
+decimal ld_federal, ld_state
+decimal ld_federal_limit, ld_state_limit
+decimal ld_federal_current, ld_state_current
+
+//Make sure valid disbursement passed in
+If IsNull(al_disburse) or al_disburse <= 0 Then 
+	Return -1
+Else
+	select count(*)
+	into :ll_count
+	from gigp_disbursement_request
+	where disbursement_id = :al_disburse;
+	
+	If ll_count <= 0 Then
+		Return -1
+	End If
+End If
+
+//Check to see if override is checked
+select override_state_federal_split
+into :li_override
+from gigp_disbursement_request
+where disbursement_id = :al_disburse;
+
+If li_override = 1 Then Return 1
+
+
+//Get the GIGP Id for that Disbursement
+select a.gigp_id, a.program
+into :ll_gigp, :ls_program
+from gigp_disbursement_request dr, gigp_application a
+where a.gigp_id = dr.gigp_id
+and dr.disbursement_id = :al_disburse;
+
+//Get the total disbursement amount for this request
+select sum(disbursed_amt)
+into :ld_disb
+from gigp_disbursement_amount
+where disbursement_id = :al_disburse;
+
+If ld_disb = 0 Then Return 0
+
+//Get the Federal and State limits for that GIGP Id if they exist
+select count(*)
+into :ll_count
+from gigp_funding_buckets
+where gigp_id = :ll_gigp;
+
+//If no funding buckets set then if a GIGP project, set the total disbursed to Federal
+If ll_count <= 0 then 
+	If ls_program = 'GIGP' Then
+		ld_federal = ld_disb
+		ld_state = 0
+		GoTo UpdateAmounts
+	Else
+		Return 0
+	End If
+End If
+
+select federal_amt, state_amt
+into :ld_federal_limit, :ld_state_limit
+from gigp_funding_buckets
+where gigp_id = :ll_gigp;
+
+//Get the Federal and State amounts for this project so far
+select sum(federal_amt), sum(state_amt)
+into :ld_federal_current, :ld_state_current
+from gigp_disbursement_request
+where gigp_id = :ll_gigp
+and disbursement_id <> :al_disburse;
+
+If IsNull(ld_federal_current) Then ld_federal_current = 0
+If IsNull(ld_state_current) Then ld_state_current = 0
+
+//Current business rule: Use all Federal funds first. Then the rest come out of State - as per AP, 11/3/2021
+//Previous business rule: Use all State funds first. Then the rest come out of Federal
+ld_federal = 0
+ld_state = 0
+ld_running_total = ld_disb
+
+//Check to see if there is any State funds left and apply
+//If ld_state_current < ld_state_limit Then
+//	If ld_running_total <= (ld_state_limit - ld_state_current) Then
+//		ld_state = ld_running_total
+//	Else
+//		ld_state = ld_state_limit - ld_state_current
+//	End If
+//	
+//	ld_running_total = ld_running_total - ld_state
+//	
+//End If
+
+//Check to see if there is any Federal funds left and apply
+If ld_federal_current < ld_federal_limit Then
+	If ld_running_total <= (ld_federal_limit - ld_federal_current) Then
+		ld_federal = ld_running_total
+	Else
+		ld_federal = ld_federal_limit - ld_federal_current
+	End If
+	
+	ld_running_total = ld_running_total - ld_federal
+	
+End If
+
+//Apply remaining funds to Federal
+//If ld_running_total > 0 Then
+//	If ld_running_total <= (ld_federal_limit - ld_federal_current) Then
+//		ld_federal = ld_running_total
+//	Else
+//		ld_federal = ld_federal_limit - ld_federal_current
+//	End If
+//	
+//End If
+
+//Apply remaining funds to State
+If ld_running_total > 0 Then
+	If ld_running_total <= (ld_state_limit - ld_state_current) Then
+		ld_state = ld_running_total
+	Else
+		ld_state = ld_state_limit - ld_state_current
+	End If
+	
+End If
+
+UpdateAmounts:
+//Update the Disbursement Federal and State amounts
+update gigp_disbursement_request
+set		federal_amt = :ld_federal,
+		state_amt = :ld_state
+where disbursement_id = :al_disburse;
+
+
+Return li_return
+end function
+

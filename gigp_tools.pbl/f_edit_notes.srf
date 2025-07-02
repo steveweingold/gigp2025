@@ -1,0 +1,38 @@
+﻿global type f_edit_notes from function_object
+end type
+
+forward prototypes
+global function integer f_edit_notes (string as_action, ref string as_notes)
+end prototypes
+
+global function integer f_edit_notes (string as_action, ref string as_notes);
+str_notes	lstr_notes
+String		ls_Return			
+
+lstr_notes.str_action 	= as_action
+lstr_notes.str_text 		= as_notes
+
+//************************************************
+// Open Notes reponse window to Read / edit:
+// (For Multi-Line Text)
+//************************************************	
+
+OpenWithParm(w_edit_notes, lstr_notes)
+
+ls_Return = Message.StringParm
+	
+If (as_action = "READ") Then Return	-1
+
+If (ls_Return = "$CANCEL$") Then Return -1
+
+as_notes = ls_Return
+
+Return 1
+	
+	
+
+
+
+
+end function
+

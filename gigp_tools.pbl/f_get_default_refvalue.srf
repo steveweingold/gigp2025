@@ -1,0 +1,20 @@
+﻿global type f_get_default_refvalue from function_object
+end type
+
+forward prototypes
+global function string f_get_default_refvalue (string as_category, string as_subcategory)
+end prototypes
+
+global function string f_get_default_refvalue (string as_category, string as_subcategory);
+String ls_value
+
+SELECT	ref_code  
+INTO		:ls_value
+FROM 	gigp_reference  
+WHERE 	category = :as_category
+AND  		sub_category = :as_subcategory
+AND		cat_default = 1; 
+			
+Return ls_value
+end function
+

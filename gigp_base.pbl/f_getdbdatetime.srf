@@ -1,0 +1,45 @@
+﻿//objectcomments Returns current date and time from DB.
+global type f_getdbdatetime from function_object
+end type
+
+forward prototypes
+global function datetime f_getdbdatetime ()
+end prototypes
+
+global function datetime f_getdbdatetime ();//////////////////////////////////////////////////////////////////////////
+//	Modification Log																		//
+//////////////////////////////////////////////////////////////////////////
+//	Date of Change		Developer		Change Description						//
+//	--------------		---------		------------------						//
+//																								//
+//////////////////////////////////////////////////////////////////////////
+
+datetime ldt_SysDateTime
+
+/////////////////////////////////////////////////////////////////////////////
+//	PowerBuilder requires a FROM clause on all SELECT statements, even when	//
+//	it's truly unnecessary (like here).  Ignore the FROM clause here, I 		//
+//	just used a table that will always be present.									//
+//																									//
+// In Oracle, the dual table is provided specifically for this purpose.		//
+/////////////////////////////////////////////////////////////////////////////
+
+// Sybase, MS SQLServer, SQLAnywhere	//
+SELECT Max(GetDate())
+INTO :ldt_sysDateTime
+FROM sysobjects;
+
+// Oracle	//
+//SELECT	sysdate
+//INTO		:ldt_sysDateTime
+//FROM		dual;
+
+// IF NO DB TIME AVAILABLE, GET LOCAL TIME.	//
+IF sqlca.SQLCode <> 0 THEN
+	ldt_SysDateTime = DateTime(Today(),Now())
+END IF
+
+Return ldt_SysDateTime
+
+end function
+

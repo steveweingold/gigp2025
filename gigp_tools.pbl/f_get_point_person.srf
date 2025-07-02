@@ -1,0 +1,53 @@
+﻿global type f_get_point_person from function_object
+end type
+
+forward prototypes
+global function string f_get_point_person (long al_gigpid)
+end prototypes
+
+global function string f_get_point_person (long al_gigpid);
+
+
+String 	ls_value1, ls_value2, ls_return
+Integer 	li_count
+
+ls_return = ""
+
+//*************************************************************
+// Point Person:
+//*************************************************************
+
+	SELECT	gigp_contacts.full_name,   
+         			gigp_contacts.phone_1  
+	INTO		:ls_value1,
+				:ls_value2	
+    	FROM		gigp_contact_links,   
+        		 	gigp_contacts  
+   	WHERE 	gigp_contact_links.contact_id = gigp_contacts.contact_id
+	AND		gigp_contact_links.contact_type = 'POINT'
+	AND  		gigp_contact_links.gigp_id = :al_gigpid;  
+	
+	If (IsNull(ls_value1) Or Trim(ls_value1) = "") Then
+		Goto FinishUp
+	End If
+	
+	ls_return = 	ls_value1
+	
+	If (IsNull(ls_value2) Or Trim(ls_value2) = "") Then
+		Goto FinishUp
+	End If
+	
+	ls_value2 = String(ls_value2, '(@@@) @@@-@@@@ @@@@@@@@@@@')
+	
+	ls_return += ("  " + ls_value2)
+		
+	
+FinishUp:
+	Return ls_return
+
+
+
+
+
+end function
+

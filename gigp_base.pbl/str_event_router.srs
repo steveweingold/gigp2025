@@ -1,0 +1,6 @@
+﻿//objectcomments Used by n_cst_event_router.
+global type str_event_router from structure
+	string		event_id
+	powerobject		subscribers[]
+end type
+

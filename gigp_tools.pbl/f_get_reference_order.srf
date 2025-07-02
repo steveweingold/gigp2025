@@ -1,0 +1,19 @@
+﻿global type f_get_reference_order from function_object
+end type
+
+forward prototypes
+global function integer f_get_reference_order (string as_category, string as_refcode)
+end prototypes
+
+global function integer f_get_reference_order (string as_category, string as_refcode);
+Long ll_order
+
+SELECT	sort_order
+INTO		:ll_order
+FROM 	gigp_reference  
+WHERE 	category = :as_category
+AND     	ref_code = :as_refcode;
+
+Return ll_order
+end function
+

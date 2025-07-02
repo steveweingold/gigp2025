@@ -1,0 +1,63 @@
+﻿release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 0 print.margin.bottom = 0 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=yes showbackcoloronxp=no )
+header(height=128 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=80 color="536870912" )
+table(column=(type=char(9) updatewhereclause=yes name=tabname dbname="compute_0001" )
+ column=(type=long updatewhereclause=yes name=groupsort dbname="compute_0002" )
+ column=(type=char(255) updatewhereclause=yes name=datename dbname="compute_0003" )
+ column=(type=datetime updatewhereclause=yes name=keydate_value dbname="keydate_value" )
+ column=(type=long updatewhereclause=yes name=sort_order dbname="sort_order" )
+ column=(type=char(100) updatewhereclause=yes name=sub_category dbname="sub_category" )
+ column=(type=char(30) updatewhereclause=yes name=seqr_type dbname="seqr_type" )
+ column=(type=char(15) updatewhereclause=yes name=keydate_ind dbname="keydate_ind" )
+ retrieve="SELECT	'Contract', 1, convert(varchar(255), R.description), d.keydate_value, r.sort_order, r.sub_category, seqr_type = (select seqr_type from gigp_application where gigp_id = :al_gigp_id), d.keydate_ind
+FROM 	gigp_reference R left outer join gigp_key_dates D on R.ref_code = D.ref_code and D.gigp_id = :al_gigp_id
+WHERE  	R.category = 'Agreement'
+
+UNION
+
+SELECT	'SEQR', 2, convert(varchar(255), R.description), d.keydate_value, r.sort_order, r.sub_category, seqr_type = (select seqr_type from gigp_application where gigp_id = :al_gigp_id), d.keydate_ind
+FROM 	gigp_reference R left outer join gigp_key_dates D on R.ref_code = D.ref_code and D.gigp_id = :al_gigp_id
+WHERE  	R.category = 'SEQR'
+
+UNION
+
+SELECT	'Readiness', 3, convert(varchar(255), R.description), d.keydate_value, r.sort_order, r.sub_category, seqr_type = (select seqr_type from gigp_application where gigp_id = :al_gigp_id), d.keydate_ind
+FROM 	gigp_reference R left outer join gigp_key_dates D on R.ref_code = D.ref_code and D.gigp_id = :al_gigp_id
+WHERE  	R.category = 'Readiness'
+AND		r.ref_code <> 'readyPERMIT'
+AND		(r.ref_code <> 'readyPROJPLANDEC'
+or			(r.ref_code = 'readyPROJPLANDEC' and
+			0 = (select count(*)
+					from gigp_checklist
+					where gigp_id = :al_gigp_id
+					and ref_code = 'pt212'
+					and checklist_value = 1)))
+
+UNION
+
+SELECT	'Legal', 4, convert(varchar(255), R.description), d.keydate_value, r.sort_order, r.sub_category, seqr_type = (select seqr_type from gigp_application where gigp_id = :al_gigp_id), d.keydate_ind
+FROM 	gigp_reference R left outer join gigp_key_dates D on R.ref_code = D.ref_code and D.gigp_id = :al_gigp_id
+WHERE  	R.category = 'keyDate'
+AND		R.sub_category = 'Legal'" filter="(IsNull(keydate_value) and tabname not in ('Legal','SEQR')) 
+OR 
+((keydate_ind not in ('APPROVED','REJECTED','NA')) and tabname = 'SEQR' and POS(sub_category, seqr_type) > 0)
+OR
+((keydate_ind not in ('APPROVED','REJECTED','NA')) and tabname = 'Legal')"arguments=(("al_gigp_id", number))  sort="groupsort A sort_order A " )
+group(level=1 header.height=76 trailer.height=0 by=("tabname" ) header.suppress=yes header.color="536870912" trailer.color="536870912" )
+button(band=header text="" defaultpicture=yes enabled=yes action="15" border="0" color="0" x="96" y="20" height="88" width="101" vtextalign="0" htextalign="0"  name=b_print visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+compute(band=header alignment="2" expression="'Pending Agreement Items for GIGP ID ' + String(al_gigp_id)"border="1" color="33554432" x="311" y="36" height="56" width="1426" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15780518" )
+column(band=header.1 id=1 alignment="0" tabsequence=32766 border="4" color="33554432" x="96" y="4" height="56" width="1641" format="[general]" html.valueishtml="0"  name=tabname visible="1" edit.limit=9 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="311" y="12" height="56" width="1426" format="[general]" html.valueishtml="0"  name=datename visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()

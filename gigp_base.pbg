@@ -1,0 +1,33 @@
+Save Format v3.0(19990112)
+@begin Libraries
+ "gigp_base.pbl" "";
+@end;
+@begin Objects
+ "w_detail.srw" "gigp_base.pbl";
+ "f_visibletoolbaritems.srf" "gigp_base.pbl";
+ "u_auto_save_timer.sru" "gigp_base.pbl";
+ "w_master_detail_mm.srw" "gigp_base.pbl";
+ "u_tabpg_dbaccess.sru" "gigp_base.pbl";
+ "f_aligntoolbars.srf" "gigp_base.pbl";
+ "u_dw_enhanced.sru" "gigp_base.pbl";
+ "w_master_detail_sm.srw" "gigp_base.pbl";
+ "w_sheet_dbaccess.srw" "gigp_base.pbl";
+ "f_getdbdatetime.srf" "gigp_base.pbl";
+ "f_transactionlog.srf" "gigp_base.pbl";
+ "u_tab_dbaccess.sru" "gigp_base.pbl";
+ "n_cst_event_router.sru" "gigp_base.pbl";
+ "n_cst_iexplorer_srv.sru" "gigp_base.pbl";
+ "u_validate_password.sru" "gigp_base.pbl";
+ "f_reconnect.srf" "gigp_base.pbl";
+ "u_date_scroll.sru" "gigp_base.pbl";
+ "u_time_scroll.sru" "gigp_base.pbl";
+ "w_gigp_response.srw" "gigp_base.pbl";
+ "n_cst_gwsend.sru" "gigp_base.pbl";
+ "str_event_router.srs" "gigp_base.pbl";
+ "w_auto_shutdown.srw" "gigp_base.pbl";
+ "w_efc_logon.srw" "gigp_base.pbl";
+ "n_cst_notification_service.sru" "gigp_base.pbl";
+ "n_cst_validate_password.sru" "gigp_base.pbl";
+ "w_pick_list.srw" "gigp_base.pbl";
+ "d_notificationgroupmembers.srd" "gigp_base.pbl";
+@end;

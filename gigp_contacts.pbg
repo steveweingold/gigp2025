@@ -1,0 +1,34 @@
+Save Format v3.0(19990112)
+@begin Libraries
+ "gigp_contacts.pbl" "";
+@end;
+@begin Objects
+ "d_call_log_detail.srd" "gigp_contacts.pbl";
+ "d_contacts_cfa_match.srd" "gigp_contacts.pbl";
+ "w_cfa_contact_match.srw" "gigp_contacts.pbl";
+ "d_application_contact.srd" "gigp_contacts.pbl";
+ "d_call_log_stack.srd" "gigp_contacts.pbl";
+ "d_call_log_proj.srd" "gigp_contacts.pbl";
+ "d_contacts_master_refs.srd" "gigp_contacts.pbl";
+ "d_call_log_choose_proj.srd" "gigp_contacts.pbl";
+ "w_call_log_choose_proj.srw" "gigp_contacts.pbl";
+ "d_call_log_category.srd" "gigp_contacts.pbl";
+ "w_call_log_stack.srw" "gigp_contacts.pbl";
+ "w_contacts_edit.srw" "gigp_contacts.pbl";
+ "d_find_contacts_list.srd" "gigp_contacts.pbl";
+ "d_contacts_master_list.srd" "gigp_contacts.pbl";
+ "w_contacts_mgmt.srw" "gigp_contacts.pbl";
+ "u_tab_contactsmgmt.sru" "gigp_contacts.pbl";
+ "u_tabpg_contactmgmt_detail.sru" "gigp_contacts.pbl";
+ "d_contacts_master_detail.srd" "gigp_contacts.pbl";
+ "str_contactparms.srs" "gigp_contacts.pbl";
+ "w_find_contact.srw" "gigp_contacts.pbl";
+ "d_call_log_contact_pick.srd" "gigp_contacts.pbl";
+ "d_contact_list_by_application.srd" "gigp_contacts.pbl";
+ "d_contact_types_by_app_contact.srd" "gigp_contacts.pbl";
+ "u_tabpg_contactmgmt_links.sru" "gigp_contacts.pbl";
+ "w_call_log.srw" "gigp_contacts.pbl";
+ "u_tabpg_contactmgmt_refs.sru" "gigp_contacts.pbl";
+ "u_tabpg_contactmgmt_politdistricts.sru" "gigp_contacts.pbl";
+ "d_contacts_master_links.srd" "gigp_contacts.pbl";
+@end;

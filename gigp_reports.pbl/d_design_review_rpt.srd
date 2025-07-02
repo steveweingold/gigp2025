@@ -1,0 +1,131 @@
+﻿release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 1 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 5 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=352 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=84 color="536870912" )
+detail(height=92 color="536870912" )
+table(column=(type=long update=yes updatewhereclause=yes name=gigp_id dbname="gigp_id" )
+ column=(type=char(2) update=yes updatewhereclause=yes name=dec_region dbname="dec_region" )
+ column=(type=char(30) update=yes updatewhereclause=yes name=srf_program dbname="srf_program" )
+ column=(type=char(30) update=yes updatewhereclause=yes name=app_status dbname="app_status" )
+ column=(type=char(30) update=yes updatewhereclause=yes name=funding_recommendation dbname="funding_recommendation" )
+ column=(type=char(30) updatewhereclause=yes name=reviewing_agency dbname="reviewing_agency" )
+ column=(type=char(1) updatewhereclause=yes name=cc_appname dbname="cc_appName" )
+ column=(type=datetime updatewhereclause=yes name=cc_engrptsubdt dbname="cc_engRptSubDt" )
+ column=(type=char(1) updatewhereclause=yes name=cc_engrptsubcmt dbname="cc_engRptSubCmt" )
+ column=(type=datetime updatewhereclause=yes name=cc_engrptapprvdt dbname="cc_engRptApprvDt" )
+ column=(type=char(1) updatewhereclause=yes name=cc_engrptapprvcmt dbname="cc_engRptApprvCmt" )
+ column=(type=datetime updatewhereclause=yes name=cc_engrptapprvdecdt dbname="cc_engRptApprvDECDt" )
+ column=(type=char(1) updatewhereclause=yes name=cc_engrptapprvdeccmt dbname="cc_engRptApprvDECCmt" )
+ column=(type=datetime updatewhereclause=yes name=cc_plansspecsubdt dbname="cc_plansSpecSubDt" )
+ column=(type=char(1) updatewhereclause=yes name=cc_plansspecsubcmt dbname="cc_plansSpecSubCmt" )
+ column=(type=char(1) updatewhereclause=yes name=cc_engineer dbname="cc_engineer" )
+ column=(type=datetime updatewhereclause=yes name=cc_trgtrvwdt dbname="cc_trgtRvwDt" )
+ column=(type=datetime updatewhereclause=yes name=cc_plansspecapprvdt dbname="cc_plansSpecApprvDt" )
+ column=(type=char(1) updatewhereclause=yes name=cc_plansspecapprvcmt dbname="cc_plansSpecApprvCmt" )
+ column=(type=datetime updatewhereclause=yes name=cc_certsentdecdt dbname="cc_certSentDecDt" )
+ column=(type=datetime updatewhereclause=yes name=cc_regdeccertdt dbname="cc_regDecCertDt" )
+ column=(type=datetime updatewhereclause=yes name=cc_serpcertsntregdt dbname="cc_serpCertSntRegDt" )
+ column=(type=datetime updatewhereclause=yes name=cc_serpcertcompldt dbname="cc_SerpCertComplDt" )
+ retrieve=" SELECT	gigp_id,  
+        		dec_region,   
+         		srf_program,   
+         		app_status,   
+        		funding_recommendation,  
+			reviewing_agency, 
+			~"~" as cc_appName,
+         		convert(datetime, null) cc_engRptSubDt,   
+			~"~" as cc_engRptSubCmt,
+			convert(datetime, null) cc_engRptApprvDt,   
+			~"~" as cc_engRptApprvCmt,
+			convert(datetime, null) cc_engRptApprvDECDt,   
+			~"~" as cc_engRptApprvDECCmt,
+         		convert(datetime, null) cc_plansSpecSubDt,   
+			~"~" as cc_plansSpecSubCmt,   
+			~"~" as cc_engineer,
+         		convert(datetime, null) cc_trgtRvwDt,   
+         		convert(datetime, null) cc_plansSpecApprvDt , 
+			~"~" as cc_plansSpecApprvCmt,
+			convert(datetime, null) cc_certSentDecDt, 
+			convert(datetime, null) cc_regDecCertDt, 
+			convert(datetime, null) cc_serpCertSntRegDt, 
+			convert(datetime, null) cc_SerpCertComplDt
+FROM 	gigp_application  
+WHERE 	((funding_recommendation in (:as_fundrec)) OR (1 = :ai_fundrec))
+AND   	((srf_program = :as_program) OR (1 = :ai_program))
+AND	((app_status = :as_status) OR (1 = :ai_status))
+AND		((round_no = :ai_roundno) OR (1 =:ai_roundflag))
+ORDER BY 	dec_region ASC,   
+         			srf_program ASC,   
+        			gigp_id ASC   
+" arguments=(("as_fundrec", stringlist),("ai_fundrec", number),("as_program", string),("ai_program", number),("as_status", string),("ai_status", number),("ai_roundno", number),("ai_roundflag", number))  sort="gigp_id A " )
+text(band=header alignment="0" text="GIGP Design Review Report" border="0" color="33554432" x="0" y="0" height="8" width="9" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="GIGP ID" border="4" color="33554432" x="18" y="272" height="56" width="219" html.valueishtml="0"  name=gigp_id_t visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="DEC
+Reg." border="4" color="33554432" x="256" y="216" height="112" width="165" html.valueishtml="0"  name=dec_region_t visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Applicant Name" border="4" color="33554432" x="439" y="272" height="56" width="850" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="GIGP Design Review Report" border="0" color="33554432" x="32" y="96" height="64" width="2583" html.valueishtml="0"  name=t_18 visible="1"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="NYS Environmental Facilities Corporation" border="0" color="33554432" x="32" y="28" height="64" width="2583" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="~"Report Date: ~" + String(today(), ~"mm/dd/yyyy~")"border="0" color="33554432" x="4887" y="28" height="64" width="1001" format="[General]" html.valueishtml="0"  name=date_1 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="~"Round No.: ~" + If (ai_roundno = 0, 'ALL', String(ai_roundno))"border="0" color="0" x="4887" y="96" height="64" width="1001" format="[GENERAL]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Date" border="4" color="33554432" x="1307" y="272" height="56" width="265" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Reports Submitted" border="4" color="33554432" x="1307" y="196" height="56" width="878" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Comments" border="4" color="33554432" x="1595" y="272" height="56" width="594" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Date" border="4" color="33554432" x="2208" y="272" height="56" width="265" html.valueishtml="0"  name=t_9 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Proj Plans and Specs Submitted" border="4" color="33554432" x="2208" y="196" height="56" width="878" html.valueishtml="0"  name=t_10 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Comments" border="4" color="33554432" x="2491" y="272" height="56" width="594" html.valueishtml="0"  name=t_8 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Reg. Cert
+Sent to
+DEC" border="4" color="33554432" x="3109" y="160" height="168" width="265" html.valueishtml="0"  name=t_20 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Reg. Cert
+Complete" border="4" color="33554432" x="3401" y="216" height="112" width="265" html.valueishtml="0"  name=t_21 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="SERP Cert
+Sent to
+Reg." border="4" color="33554432" x="3694" y="160" height="168" width="265" html.valueishtml="0"  name=t_22 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="SERP Cert
+Complete" border="4" color="33554432" x="3986" y="216" height="112" width="265" html.valueishtml="0"  name=t_23 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Engineer" border="4" color="33554432" x="5024" y="272" height="56" width="416" html.valueishtml="0"  name=t_11 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Target
+Date" border="4" color="33554432" x="5458" y="216" height="112" width="265" html.valueishtml="0"  name=t_12 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Reports DEC Approved" border="4" color="33554432" x="4274" y="196" height="56" width="727" html.valueishtml="0"  name=t_19 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Date" border="4" color="33554432" x="4274" y="272" height="56" width="265" html.valueishtml="0"  name=t_24 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Comments" border="4" color="33554432" x="4562" y="272" height="56" width="443" html.valueishtml="0"  name=t_25 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Reports EFC Approved" border="4" color="33554432" x="5746" y="196" height="56" width="727" html.valueishtml="0"  name=t_16 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Date" border="4" color="33554432" x="5746" y="272" height="56" width="265" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Comments" border="4" color="33554432" x="6030" y="272" height="56" width="443" html.valueishtml="0"  name=t_17 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Date" border="4" color="33554432" x="6496" y="272" height="56" width="265" html.valueishtml="0"  name=t_14 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Final Proj Plan and Spec App" border="4" color="33554432" x="6496" y="196" height="56" width="727" html.valueishtml="0"  name=t_13 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Comments" border="4" color="33554432" x="6779" y="272" height="56" width="443" html.valueishtml="0"  name=t_15 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="2" tabsequence=32766 border="2" color="33554432" x="18" y="20" height="56" width="219" format="[general]" html.valueishtml="0"  name=gigp_id visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="2" color="33554432" x="439" y="20" height="56" width="850" format="[general]" html.valueishtml="0"  name=cc_appname visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.useellipsis=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="2" tabsequence=32766 border="2" color="33554432" x="256" y="20" height="56" width="165" format="[general]" html.valueishtml="0"  name=dec_region visible="1" edit.limit=2 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="2" color="33554432" x="270" y="108" height="56" width="274" format="[general]" html.valueishtml="0"  name=app_status visible="0" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="255" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="2" color="33554432" x="571" y="108" height="56" width="558" format="[general]" html.valueishtml="0"  name=funding_recommendation visible="0" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="255" )
+column(band=detail id=8 alignment="2" tabsequence=32766 border="2" color="33554432" x="1307" y="20" height="56" width="265" format="mm/dd/yyyy" html.valueishtml="0"  name=cc_engrptsubdt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="2" color="33554432" x="1595" y="20" height="56" width="594" format="[general]" html.valueishtml="0"  name=cc_engrptsubcmt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.useellipsis=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="2" tabsequence=32766 border="2" color="33554432" x="2208" y="20" height="56" width="265" format="mm/dd/yyyy" html.valueishtml="0"  name=cc_plansspecsubdt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=15 alignment="0" tabsequence=32766 border="2" color="33554432" x="2491" y="20" height="56" width="594" format="[general]" html.valueishtml="0"  name=cc_plansspecsubcmt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.useellipsis=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=20 alignment="2" tabsequence=32766 border="2" color="33554432" x="3109" y="20" height="56" width="265" format="mm/dd/yyyy" html.valueishtml="0"  name=cc_certsentdecdt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=21 alignment="2" tabsequence=32766 border="2" color="33554432" x="3401" y="20" height="56" width="265" format="mm/dd/yyyy" html.valueishtml="0"  name=cc_regdeccertdt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=22 alignment="2" tabsequence=32766 border="2" color="33554432" x="3694" y="20" height="56" width="265" format="mm/dd/yyyy" html.valueishtml="0"  name=cc_serpcertsntregdt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=23 alignment="2" tabsequence=32766 border="2" color="33554432" x="3986" y="20" height="56" width="265" format="mm/dd/yyyy" html.valueishtml="0"  name=cc_serpcertcompldt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=17 alignment="2" tabsequence=32766 border="2" color="33554432" x="5458" y="20" height="56" width="265" format="mm/dd/yyyy" html.valueishtml="0"  name=cc_trgtrvwdt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="2" tabsequence=32766 border="2" color="33554432" x="4274" y="20" height="56" width="265" format="m/d/yyyy" html.valueishtml="0"  name=cc_engrptapprvdecdt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="2" color="33554432" x="4562" y="20" height="56" width="443" format="[general]" html.valueishtml="0"  name=cc_engrptapprvdeccmt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=16 alignment="0" tabsequence=32766 border="2" color="33554432" x="5024" y="20" height="56" width="416" format="[general]" html.valueishtml="0"  name=cc_engineer visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="2" tabsequence=32766 border="2" color="33554432" x="5746" y="20" height="56" width="265" format="mm/dd/yyyy" html.valueishtml="0"  name=cc_engrptapprvdt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="2" color="33554432" x="6034" y="20" height="56" width="443" format="[general]" html.valueishtml="0"  name=cc_engrptapprvcmt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=18 alignment="2" tabsequence=32766 border="2" color="33554432" x="6496" y="20" height="56" width="265" format="mm/dd/yyyy" html.valueishtml="0"  name=cc_plansspecapprvdt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=19 alignment="0" tabsequence=32766 border="2" color="33554432" x="6779" y="20" height="56" width="443" format="[general]" html.valueishtml="0"  name=cc_plansspecapprvcmt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=footer alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="33554432" x="4887" y="12" height="56" width="1001" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

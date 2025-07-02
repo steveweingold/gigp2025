@@ -1,0 +1,61 @@
+﻿//objectcomments Logs message and state of sqlca to a file, the db or both.
+global type f_transactionlog from function_object
+end type
+
+forward prototypes
+global subroutine f_transactionlog (string as_key_name, long al_key_id, string as_app_object, string as_log_category, string as_log_message)
+end prototypes
+
+global subroutine f_transactionlog (string as_key_name, long al_key_id, string as_app_object, string as_log_category, string as_log_message);
+//*******************************************************
+// Log Database Update:
+//*******************************************************
+
+DateTime	ldt_Now
+long			ll_logID
+String			ls_user
+
+//*************************************
+// Get current date and time from DB:
+//*************************************
+
+ldt_Now = f_getdbdatetime()
+
+//*************************************
+// Get User ID:
+//*************************************
+
+ls_user = gnv_App.of_GetUserID()
+
+//*************************************
+// Get Next Log ID:
+//*************************************
+
+Select Max(log_id)
+Into :ll_logID
+From  gigp_transaction_log;
+
+If IsNull(ll_logID) Then
+		ll_logID = 0
+End If
+
+ll_logID ++
+
+//*************************************
+// Log to DB Transaction:
+//*************************************
+
+	INSERT INTO gigp_transaction_log
+	VALUES (	:ll_logID,
+				:ls_user,
+				:ldt_Now,
+				:as_key_name,
+				:al_key_id,
+				:as_app_object,
+				:as_log_category,				
+				:as_log_message);
+
+
+
+end subroutine
+

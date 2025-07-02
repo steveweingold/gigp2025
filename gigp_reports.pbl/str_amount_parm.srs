@@ -1,0 +1,7 @@
+﻿global type str_amount_parm from structure
+	string		str_amtlabel1
+	decimal{2}		str_amtvalue1
+	string		str_amtlabel2
+	decimal{2}		str_amtvalue2
+end type
+

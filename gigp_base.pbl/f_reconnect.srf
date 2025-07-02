@@ -1,0 +1,56 @@
+﻿//objectcomments Reconnects sqlca and triggers ue_reconnect event in all sheets.
+global type f_reconnect from function_object
+end type
+
+forward prototypes
+global function integer f_reconnect ()
+end prototypes
+
+global function integer f_reconnect ();//////////////////////////////////////////////////////////////////////////
+//	Modification Log																		//
+//////////////////////////////////////////////////////////////////////////
+//	Date of Change		Developer		Change Description						//
+//	--------------		---------		------------------						//
+//																								//
+//////////////////////////////////////////////////////////////////////////
+
+w_frame	lw_Frame
+w_sheet	lw_Sheets[]
+int		li_UB, &
+			li_Index
+string	ls_Orig_LogID, &
+			ls_Orig_Password
+
+SetPointer(HourGlass!)
+
+// Disconnect in case we are still connected.	//
+DISCONNECT USING sqlca;
+
+// Re-Connect.	//
+CONNECT USING sqlca;
+
+IF sqlca.SQLCode <> 0 THEN
+	Return -1
+END IF
+
+lw_Frame = gnv_App.of_GetFrame()
+
+// Start sheet manager service if it isn't started.	//
+IF NOT IsValid(lw_Frame.inv_sheetmanager) THEN
+	lw_Frame.of_SetSheetManager(True)
+END IF
+
+// This function returns a reference to every open sheet in the frame.	//
+lw_Frame.inv_sheetmanager.of_GetSheets(lw_Sheets)
+
+// Notify each window that it should reconnect it's datawindows and datastores.	//
+li_UB = UpperBound(lw_Sheets)
+
+FOR li_Index = 1 TO li_UB
+	lw_Sheets[li_Index].Event Dynamic ue_reconnect()
+NEXT
+
+Return 1
+
+end function
+

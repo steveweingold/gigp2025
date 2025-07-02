@@ -1,0 +1,34 @@
+﻿//objectcomments Generated Application Executable Project
+EXE:gigp.exe,,0,1,1
+CMP:0,0,0,2,0,0
+COM:Appeon
+DES:Appeon Product File
+CPY:
+PRD:PowerBuilder Enterprise Series
+PVN:1,0,0,1
+PVS:1.0.0.1
+FVN:1,0,0,1
+FVS:1.0.0.1
+PBD:gigp_main.pbl,,1
+PBD:gigp_application.pbl,,1
+PBD:gigp_base.pbl,,1
+PBD:gigp_contacts.pbl,,1
+PBD:gigp_lookups.pbl,,1
+PBD:gigp_reports.pbl,,1
+PBD:gigp_summary.pbl,,1
+PBD:gigp_tools.pbl,,1
+PBD:pfewnsrv.pbl,,1
+PBD:pfcapp.pbl,,1
+PBD:pfcapsrv.pbl,,1
+PBD:pfcdwsrv.pbl,,1
+PBD:pfcmain.pbl,,1
+PBD:pfcmsg.pbl,,1
+PBD:pfcutil.pbl,,1
+PBD:pfcwnsrv.pbl,,1
+PBD:pfeapsrv.pbl,,1
+PBD:pfedwsrv.pbl,,1
+PBD:pfemain.pbl,,1
+PBD:pfeutil.pbl,,1
+PBD:q:\powerbuilder apps (efc)\pb2025\efcauthenticate\efcauthenticate.pbd,,1
+
+ 

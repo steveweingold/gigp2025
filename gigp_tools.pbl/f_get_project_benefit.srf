@@ -1,0 +1,95 @@
+﻿global type f_get_project_benefit from function_object
+end type
+
+forward prototypes
+global function string f_get_project_benefit (long al_design_calc_id)
+end prototypes
+
+global function string f_get_project_benefit (long al_design_calc_id);string ls_practice, ls_return, ls_label
+long ll_gigp
+decimal ld_benefit, ld_p, ld_i, ld_a
+
+select practice_type, gigp_id
+into :ls_practice, :ll_gigp
+from gigp_design_calcs
+where design_calc_id = :al_design_calc_id;
+
+Choose Case ls_practice
+	Case 'DesCalcStreamLt'
+		ls_label = 'Stream Daylighting Segment (Lin Ft): '
+		
+		select metric_value
+		into :ld_benefit
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code = 'DCMSD1';
+		
+			
+	Case 'DesCalcWetland'
+		ls_label = 'Wetlands (acres): '
+		
+		select sum(metric_value)
+		into :ld_benefit
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code in ('DCMWET1', 'DCMWET2');
+			
+	Case 'DesCalcStormHar'
+		ls_label = 'Volume Stored (gallons): '
+		
+		select metric_value
+		into :ld_benefit
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code = 'DCMSH1';
+			
+	Case Else
+		ls_label = 'WQv (ft3): '
+		
+		ld_p = 0
+		ld_i = 0
+		ld_a = 0
+		
+		select metric_value
+		into :ld_p
+		from gigp_project_metrics
+		where gigp_id = :ll_gigp
+		and ref_code = 'PINCHES';
+		
+		If IsNull(ld_p) Then ld_p = 0
+		
+		//Get the Percent Impervious
+		select metric_value
+		into :ld_i
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code in ('DCMBR9','DCMBS9','DCMPP9','DCMRG9','DCMGR6');
+		
+		If IsNull(ld_i) Then ld_i = 0
+		ld_i = Round(ld_i,0)
+		
+		//Get Drainage Area
+		select metric_value
+		into :ld_a
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code in ('DCMBR7','DCMBS7','DCMPP8','DCMRG7','DCMGR1');
+		
+		If IsNull(ld_a) Then ld_a = 0
+		
+		//Convert to SQFT if not already in (Most in Acres, Green Roof are in SQFT)
+		If LEFT(ls_practice,9) <> 'DesCalcGR' Then
+			ld_a = ld_a * 43560	//convert to sqft
+		End If
+		
+		ld_benefit = ((ld_p) * (0.05 + (0.009 * ld_i)) * (ld_a)) / 12
+			
+End Choose
+
+If IsNull(ld_benefit) Then ld_benefit = 0
+
+ls_return = ls_label + '  ' + String(Round(ld_benefit,2), "#,##0.00")
+
+Return ls_return 
+end function
+

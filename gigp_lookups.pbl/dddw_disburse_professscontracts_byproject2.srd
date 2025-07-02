@@ -1,0 +1,44 @@
+﻿release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=0 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=92 color="536870912" )
+table(column=(type=char(50) updatewhereclause=yes name=contract_type dbname="contract_type" )
+ column=(type=long updatewhereclause=yes name=profess_contract_id dbname="profess_contract_id" )
+ column=(type=decimal(2) updatewhereclause=yes name=contract_amt dbname="contract_amt" )
+ column=(type=char(65) updatewhereclause=yes name=organization dbname="organization" )
+ retrieve="SELECT Distinct 	K.contract_type,   
+       					K.profess_contract_id,   
+						Sum(K.eligible_amt) as contract_amt,
+       					C.organization       
+FROM		gigp_contact_links L,   
+        		gigp_contacts C,   
+        		gigp_professional_contracts K  
+WHERE 	L.contact_id = C.contact_id
+AND     	C.contact_id = K.contact_id
+AND       l.gigp_id = K.gigp_id
+AND       L.contact_type = ~"VEND~"
+AND       K.contract_type <> ~"Contingency~"
+GROUP BY  	K.contract_type,   
+       			K.profess_contract_id,   				
+       			C.organization      
+
+
+" )
+compute(band=detail alignment="0" expression="Upper(contract_type) + ~" - ~" +  organization + ~",  ~" + String( contract_amt , '$#,##0.00;($#,##0.00)')"border="0" color="33554432" x="18" y="20" height="56" width="1993" format="[GENERAL]" html.valueishtml="0"  name=cf_proffescontract visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="59" y="104" height="56" width="370" format="[general]" html.valueishtml="0"  name=contract_type visible="0" edit.limit=50 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="255" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="59" y="172" height="56" width="370" format="[general]" html.valueishtml="0"  name=organization visible="0" edit.limit=65 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="255" )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="33554432" x="59" y="240" height="56" width="526" format="[general]" html.valueishtml="0"  name=profess_contract_id visible="0" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="255" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="59" y="308" height="56" width="370" format="$#,##0.00;($#,##0.00)" html.valueishtml="0"  name=contract_amt visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="255" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

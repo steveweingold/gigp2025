@@ -1,0 +1,72 @@
+﻿global type f_get_app_determination from function_object
+end type
+
+forward prototypes
+global function string f_get_app_determination (long al_gigpid)
+end prototypes
+
+global function string f_get_app_determination (long al_gigpid);
+String 	ls_value1, ls_value2
+Integer 	li_count, li_sort
+
+//*************************************************************
+// Determination Items:
+//*************************************************************
+
+DECLARE c123AppDet CURSOR FOR
+		SELECT  	gigp_reference.description, gigp_reference.sort_order
+    		FROM 	gigp_checklist,   
+        			 	gigp_reference
+   		WHERE 	gigp_checklist.ref_code = gigp_reference.ref_code
+         	AND		gigp_reference.category = 'checkListItem'
+        	AND		gigp_reference.sub_category = 'projectDescrip'
+		AND 		gigp_checklist.gigp_id = :al_gigpID
+		AND 		gigp_checklist.checklist_value2 = 1
+		AND		gigp_checklist.ref_code <> 'PRBC'
+		ORDER BY gigp_reference.sort_order ASC  ;			
+		
+	
+OPEN c123AppDet;
+	
+FETCH c123AppDet INTO :ls_value1, :li_sort;
+
+DO WHILE SQLCA.sqlcode = 0
+	
+	If (Len(ls_value2) < 1) Then
+		ls_value2 = ls_value1
+	Else
+		ls_value2 += (", " + ls_value1)
+	End If
+								
+	FETCH c123AppDet INTO :ls_value1, :li_sort;
+	
+LOOP
+	
+CLOSE c123AppDet;			
+
+If (Len(ls_value2) > 0) Then
+	ls_value2 += "."
+End If
+
+//*************************************************************
+// Business Case Required?
+//*************************************************************
+
+SELECT	Count(gigp_id)  
+INTO 		:li_count
+FROM 	gigp_checklist  
+WHERE 	ref_code = 'PRBC' 
+AND     	checklist_value2 = 1
+AND     	gigp_id = :al_gigpID; 
+
+If (li_count > 0) Then	
+	ls_value2 += (" Business Case. ")
+End If
+
+
+Return ls_value2
+
+
+
+end function
+

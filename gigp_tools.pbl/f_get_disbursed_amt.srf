@@ -1,0 +1,17 @@
+﻿global type f_get_disbursed_amt from function_object
+end type
+
+forward prototypes
+global function decimal f_get_disbursed_amt (long al_profess_contract_id)
+end prototypes
+
+global function decimal f_get_disbursed_amt (long al_profess_contract_id);decimal ld_disbursed
+
+select sum(disbursed_amt)
+into :ld_disbursed
+from gigp_disbursement_amount
+where professional_contract_id = :al_profess_contract_id;
+
+Return ld_disbursed
+end function
+

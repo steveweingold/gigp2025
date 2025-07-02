@@ -1,0 +1,141 @@
+﻿//objectcomments Aligns sheet toolbar with frame toolbar.
+global type f_aligntoolbars from function_object
+end type
+
+forward prototypes
+global subroutine f_aligntoolbars (window aw_sheet)
+end prototypes
+
+global subroutine f_aligntoolbars (window aw_sheet);//////////////////////////////////////////////////////////////////////////
+//	Modification Log																		//
+//////////////////////////////////////////////////////////////////////////
+//	Date of Change		Developer		Change Description						//
+//	--------------		---------		------------------						//
+//																								//
+//////////////////////////////////////////////////////////////////////////
+
+// This function should be called from the open event of			//
+// sheet windows. This will probably be done in an ancestor.	//
+
+// This function assumes only one toolbar is associated with	//
+// each menu. ToolBarItemBarIndex is hardcoded to be 1 in the	//
+// Get/SetToolBar() and SetToolBarPos() calls.						//
+
+m_master				lm_Frame, &
+						lm_Sheet
+window				lw_Frame
+long					ll_Offset
+int					li_Index, &
+						li_Count, &
+						li_Dock_Row						= 1, &
+						li_Sheet_Visible_Items, &
+						li_Frame_Visible_Items, &
+						li_Horizontal_Limit, &
+						li_Vertical_Limit
+toolbaralignment	lta_Frame_Align				= AlignAtTop!, &
+						lta_Sheet_Align				= AlignAtTop!
+boolean				lb_Visible, &
+						lb_WhoCares, &
+						lb_Move_Frame_ToolBar		= True
+environment			le_Env
+
+// Set horizontal and vertical limits based on screen resolution.	//
+GetEnvironment(le_Env)
+
+CHOOSE CASE le_Env.ScreenHeight
+CASE 480
+	li_Horizontal_Limit	= 11
+	li_Vertical_Limit		= 10
+CASE 600
+	li_Horizontal_Limit	= 15
+	li_Vertical_Limit		= 14
+CASE 768
+	li_Horizontal_Limit	= 18
+	li_Vertical_Limit		= 18
+CASE 1024
+	li_Horizontal_Limit	= 23
+	li_Vertical_Limit		= 23
+CASE ELSE
+	li_Horizontal_Limit	= 26
+	li_Vertical_Limit		= 26
+END CHOOSE
+
+// Get menu reference for frame.	//
+lw_Frame	= gnv_App.of_GetFrame()
+lm_Frame	= lw_Frame.MenuID
+
+// If no frame menu, Align = Top.	//
+IF IsValid(lm_Frame) THEN
+	li_Frame_Visible_Items	= f_visibletoolbaritems(lm_Frame)
+
+	// Where is the frame toolbar?								//
+	// GetToolBar() sets lb_Visible and lta_Frame_Align.	//
+	lw_Frame.GetToolBar(1,lb_Visible,lta_Frame_Align)
+END IF
+
+// Get menu reference for sheet.	//
+lm_Sheet = aw_Sheet.MenuID
+
+IF NOT IsValid(lm_Sheet) THEN
+	Return
+END IF
+
+// Where is the frame toolbar?								//
+// GetToolBar() sets lb_WhoCares and lta_Sheet_Align.	//
+aw_Sheet.GetToolBar(1,lb_WhoCares,lta_Sheet_Align)
+
+li_Sheet_Visible_Items	= f_visibletoolbaritems(lm_Sheet)
+
+// Determine offset. One toolbar item with text is	//
+// 50 offset increments wide, 35 tall.					//
+CHOOSE CASE lta_Frame_Align
+CASE AlignAtTop!, AlignAtBottom!
+	IF li_Frame_Visible_Items = 0 THEN
+		ll_OffSet = 0
+		lb_Move_Frame_ToolBar = False
+	ELSE
+		ll_OffSet = (li_Frame_Visible_Items * 50) + 50
+
+		// If more visible toolbar items than can fit, put sheet toolbar		//
+		// on dockrow 2. About 15 (800x600) can fit with text horizontally.	//
+		IF li_Frame_Visible_Items + li_Sheet_Visible_Items > li_Horizontal_Limit AND &
+					gnv_App.iapp_Object.ToolBarText THEN
+			li_Dock_Row = 2
+			ll_Offset = 0
+		END IF
+	END IF
+
+CASE AlignAtLeft!, AlignAtRight!
+	IF li_Frame_Visible_Items = 0 THEN
+		ll_OffSet = 0
+		lb_Move_Frame_ToolBar = False
+	ELSE
+		ll_OffSet = (li_Frame_Visible_Items * 35) + 35
+
+		// If more visible toolbar items than can fit, put sheet toolbar		//
+		// on dockrow 2. About 14 (800x600) can fit with text vertically.	//
+		IF li_Frame_Visible_Items + li_Sheet_Visible_Items > li_Vertical_Limit AND &
+					gnv_App.iapp_Object.ToolBarText THEN
+			li_Dock_Row = 2
+			ll_Offset = 0
+		END IF
+	END IF
+
+CASE Floating!
+	lta_Frame_Align			= AlignAtTop!
+	lb_Move_Frame_ToolBar	= False
+END CHOOSE
+
+// Set frame toolbar position.	//
+IF lb_Move_Frame_ToolBar THEN
+	lw_Frame.SetToolBarPos(1,1,0,False)
+END IF
+
+// Set sheet toolbar alignment.	//
+aw_Sheet.SetToolBar(1,True,lta_Frame_Align)
+
+// Set sheet toolbar position.	//
+aw_Sheet.SetToolBarPos(1,li_Dock_Row,ll_OffSet,False)
+
+end subroutine
+

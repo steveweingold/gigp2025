@@ -1,0 +1,34 @@
+﻿global type f_createdatastore from function_object
+end type
+
+forward prototypes
+global function integer f_createdatastore (ref datastore ads_datastore, n_tr atr_trans, string as_sql)
+end prototypes
+
+global function integer f_createdatastore (ref datastore ads_datastore, n_tr atr_trans, string as_sql);// Calling code is responsible for destroying ads_DataStore.
+
+string	ls_Syntax, &
+		ls_ErrorSyntaxFromSQL, &
+		ls_ErrorCreate
+
+ls_Syntax = atr_Trans.SyntaxFromSQL(as_SQL, 'Style(Type=Form)', ls_ErrorSyntaxFromSQL)
+
+if ls_Syntax = "" then
+	MessageBox("f_createdatastore Error",ls_ErrorSyntaxFromSQL)
+	return -1
+end if
+
+ads_DataStore = CREATE n_ds
+
+if ads_DataStore.CREATE(ls_Syntax, ls_ErrorCreate) <> 1 then
+	MessageBox("f_createdatastore Error",ls_ErrorCreate)
+	return -1
+end if
+
+ads_DataStore.SetTransObject(atr_Trans)
+
+Return 0
+
+
+end function
+

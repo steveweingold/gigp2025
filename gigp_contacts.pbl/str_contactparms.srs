@@ -1,0 +1,5 @@
+﻿global type str_contactparms from structure
+	long		str_contactid
+	long		str_gigpid
+end type
+

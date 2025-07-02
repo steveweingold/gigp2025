@@ -1,0 +1,22 @@
+﻿global type f_getroundno from function_object
+end type
+
+forward prototypes
+global function integer f_getroundno (long al_gigpid)
+end prototypes
+
+global function integer f_getroundno (long al_gigpid);integer li_round_no
+
+If IsNull(al_gigpid) or al_gigpid <= 0 Then 
+	Return 0
+End If
+
+select round_no
+into :li_round_no
+from gigp_application
+where gigp_id = :al_gigpid;
+
+Return li_round_no
+
+end function
+

@@ -1,0 +1,4 @@
+﻿global type str_report_parm from structure
+	blob		str_parm
+end type
+

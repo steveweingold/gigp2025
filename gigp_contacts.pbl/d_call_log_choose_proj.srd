@@ -1,0 +1,41 @@
+﻿release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=84 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=100 color="536870912" )
+table(column=(type=long updatewhereclause=yes name=checked dbname="checked" values="	1/	0" )
+ column=(type=char(90) updatewhereclause=yes name=applicant dbname="applicant" )
+ column=(type=char(100) updatewhereclause=yes name=project_name dbname="gigp_application.project_name" )
+ column=(type=long updatewhereclause=yes name=gigp_id dbname="gigp_contact_links.gigp_id" )
+ retrieve="  SELECT distinct 0 as ~"checked~",
+		applicant = (select c2.full_name
+						from gigp_contacts c2, gigp_contact_links cl2
+						where c2.contact_id = cl2.contact_id
+						and cl2.contact_type = 'APP'
+						and cl2.gigp_id = cl.gigp_id),
+		a.project_name,
+         cl.gigp_id  
+    FROM gigp_contact_links cl,
+         gigp_contacts c,
+		gigp_application a
+   WHERE cl.contact_id = c.contact_id
+and cl.contact_id = :al_contact_id
+and a.gigp_id = cl.gigp_id" arguments=(("al_contact_id", number))  sort="gigp_id A " )
+button(band=header text="" filename="checkmark.bmp" enabled=yes action="0" border="0" color="0" x="9" y="8" height="68" width="78" vtextalign="0" htextalign="0"  name=b_check_all visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+text(band=header alignment="2" text="Applicant / Project Name" border="2" color="33554432" x="347" y="16" height="56" width="1929" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="GIGP ID" border="2" color="33554432" x="128" y="16" height="56" width="197" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="1" tabsequence=10 border="0" color="33554432" x="23" y="12" height="64" width="69" format="[general]" html.valueishtml="0"  name=checked visible="1" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression=" applicant + ' / ' +  project_name "border="0" color="33554432" x="347" y="16" height="56" width="1929" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="2" tabsequence=32766 border="0" color="33554432" x="128" y="12" height="64" width="197" format="[general]" html.valueishtml="0"  name=gigp_id visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

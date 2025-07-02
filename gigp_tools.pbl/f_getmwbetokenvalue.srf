@@ -1,0 +1,65 @@
+﻿global type f_getmwbetokenvalue from function_object
+end type
+
+forward prototypes
+global function long f_getmwbetokenvalue (string as_tokentype, integer an_tokencnt)
+end prototypes
+
+global function long f_getmwbetokenvalue (string as_tokentype, integer an_tokencnt);//*********************************************************************
+//	DESC:	Gets next value for non-sensible, sequential database
+//			keys (in place of 'identity' columns).
+//			In most cases, call this from ue_PreUpdate() on datawindows.
+//		
+//	NOTE: If more than one user gets the same value, causing a
+//			'duplicate key' error, move the call to this function
+//			into the ue_PreUpdate() on the window since this event
+//			is outside the overall update transaction and will be
+//			committed immediately.
+//
+//       Code compliments of Mark Callahan (6/03)
+//*********************************************************************
+
+Integer	li_rc
+Long		ll_nextValue, ll_currValue
+String		ls_User, ls_Msg
+Datetime	ldt_Today
+
+ls_User   = gnv_app.of_GetUserId()
+ldt_Today = f_GetDBDatetime()
+
+//***********************************
+// Get current token value:
+//***********************************
+
+Select token_value
+Into  :ll_currValue
+From   mwbe_tokens 
+Where  token_type = :as_TokenType;
+
+//***********************************
+// Add 1 to get next token value &
+// update the token table:
+//***********************************
+
+ll_nextValue = (ll_currValue + an_tokenCnt)
+
+Update mwbe_tokens
+Set 	 token_value     	= :ll_nextValue,
+		 last_updated_by 	= :ls_User,
+		 last_updated_dt 	= :ldt_Today
+Where token_type = :as_TokenType;
+	
+If sqlca.SQLCode <> 0 Then Goto Error
+
+Return ll_nextValue
+
+Error:
+
+	ls_Msg = "Error retrieving next value for ' + as_TokenType + ' in function of_GetTokenValue()."
+				
+	MessageBox("ERRROR!", ls_Msg)		
+	
+	Return -1
+
+end function
+

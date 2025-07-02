@@ -1,0 +1,80 @@
+﻿global type f_get_project_benefit_value from function_object
+end type
+
+forward prototypes
+global function decimal f_get_project_benefit_value (long al_design_calc_id)
+end prototypes
+
+global function decimal f_get_project_benefit_value (long al_design_calc_id);string ls_practice, ls_return, ls_label
+long ll_gigp
+decimal ld_benefit, ld_p, ld_i, ld_a
+
+select practice_type, gigp_id
+into :ls_practice, :ll_gigp
+from gigp_design_calcs
+where design_calc_id = :al_design_calc_id;
+
+Choose Case ls_practice
+	Case 'DesCalcStreamLt'
+		select metric_value
+		into :ld_benefit
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code = 'DCMSD1';
+		
+			
+	Case 'DesCalcWetland'
+		select sum(metric_value)
+		into :ld_benefit
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code in ('DCMWET1', 'DCMWET2');
+			
+	Case 'DesCalcStormHar'
+		select metric_value
+		into :ld_benefit
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code = 'DCMSH1';
+			
+	Case Else
+		ld_p = 0
+		ld_i = 0
+		ld_a = 0
+		
+		select metric_value
+		into :ld_p
+		from gigp_project_metrics
+		where gigp_id = :ll_gigp
+		and ref_code = 'PINCHES';
+		
+		If IsNull(ld_p) Then ld_p = 0
+		
+		//Get the Percent Impervious
+		select metric_value
+		into :ld_i
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code in ('DCMBR9','DCMBS9','DCMPP9','DCMRG9');
+		
+		If IsNull(ld_i) Then ld_i = 0
+		ld_i = Round(ld_i,0)
+		
+		select metric_value
+		into :ld_a
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code in ('DCMBR7','DCMBS7','DCMPP8','DCMRG7');
+		
+		If IsNull(ld_a) Then ld_a = 0
+		ld_a = ld_a * 43560	//convert to sqft
+		
+		ld_benefit = ((ld_p) * (0.05 + (0.009 * ld_i)) * (ld_a)) / 12
+			
+End Choose
+
+Return ld_benefit
+
+
+end function
+

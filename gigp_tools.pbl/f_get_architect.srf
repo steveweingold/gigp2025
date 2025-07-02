@@ -1,0 +1,41 @@
+﻿global type f_get_architect from function_object
+end type
+
+forward prototypes
+global function string f_get_architect (long al_gigpid)
+end prototypes
+
+global function string f_get_architect (long al_gigpid);
+String 	ls_value, ls_return
+
+ls_return = ""
+
+//*************************************************************
+// Project Reviewer:
+//*************************************************************
+
+//	SELECT	gigp_contacts.full_name         			
+
+	SELECT	gigp_contacts.last_name
+	INTO		:ls_value
+    	FROM		gigp_contact_links,   
+        		 	gigp_contacts  
+   	WHERE 	gigp_contact_links.contact_id = gigp_contacts.contact_id
+	AND		gigp_contact_links.contact_type = 'EFCLANDARCH'
+	AND  		gigp_contact_links.gigp_id = :al_gigpid;  
+	
+	If (IsNull(ls_value) Or Trim(ls_value) = "") Then
+		Goto FinishUp
+	End If
+	
+	ls_return = 	ls_value
+	
+FinishUp:
+	Return ls_return
+
+
+
+
+
+end function
+

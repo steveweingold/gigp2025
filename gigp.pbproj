@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Project>
+  <Type Name="pb"/>
+  <Application Name="gigp"/>
+  <Libraries AppEntry="gigp_main.pbl">
+    <Library Path="gigp_main.pbl"/>
+    <Library Path="gigp_application.pbl"/>
+    <Library Path="gigp_base.pbl"/>
+    <Library Path="gigp_contacts.pbl"/>
+    <Library Path="gigp_lookups.pbl"/>
+    <Library Path="gigp_reports.pbl"/>
+    <Library Path="gigp_summary.pbl"/>
+    <Library Path="gigp_tools.pbl"/>
+    <Library Path="pfewnsrv.pbl"/>
+    <Library Path="pfcapp.pbl"/>
+    <Library Path="pfcapsrv.pbl"/>
+    <Library Path="pfcdwsrv.pbl"/>
+    <Library Path="pfcmain.pbl"/>
+    <Library Path="pfcmsg.pbl"/>
+    <Library Path="pfcutil.pbl"/>
+    <Library Path="pfcwnsrv.pbl"/>
+    <Library Path="pfeapsrv.pbl"/>
+    <Library Path="pfedwsrv.pbl"/>
+    <Library Path="pfemain.pbl"/>
+    <Library Path="pfeutil.pbl"/>
+    <Library Path="q:\powerbuilder apps (efc)\pb2025\efcauthenticate\efcauthenticate.pbd"/>
+  </Libraries>
+</Project>

@@ -1,0 +1,196 @@
+﻿global type f_get_project_amount from function_object
+end type
+
+forward prototypes
+global function decimal f_get_project_amount (long al_gigpid, string as_type)
+end prototypes
+
+global function decimal f_get_project_amount (long al_gigpid, string as_type);string ls_category
+Decimal ld_Amount
+
+//*************************************************************
+// REQUESTED Total Project Funding:
+//*************************************************************
+If (as_type = "TPF") Then
+	
+	SELECT	GR.category,
+				Sum(GA.ref_amt)	
+	INTO 		:ls_category,
+				:ld_Amount
+	FROM 	gigp_amounts GA,   
+	         		gigp_reference GR  
+	WHERE 	GA.ref_code = GR.ref_code
+	AND		GR.category = 'projectFunding'
+	AND 		GA.gigp_id = :al_gigpid
+	Group by GR.category;
+	
+
+//*************************************************************
+// DISBURSED Amount 9/2024
+//*************************************************************
+ElseIf (as_type = "DISBURSE") Then
+
+	select sum(disbursed_amt)
+	into :ld_Amount
+	from gigp_disbursement_amount
+	where gigp_id = :al_gigpid;
+
+//*************************************************************
+// RETURNED Amount 9/2024
+//*************************************************************
+ElseIf (as_type = "RETURN") Then
+
+	SELECT	Sum(GA.approved_amt)	
+	INTO 		:ld_Amount
+	FROM 	gigp_amounts GA,   
+	         		gigp_reference GR  
+	WHERE 	GA.ref_code = GR.ref_code
+	AND		GR.category = 'projectFunding'
+	AND 		GA.ref_code in ('FUNDREALLOCATE')
+	AND 		GA.gigp_id = :al_gigpid;	
+
+	
+//*************************************************************
+// REQUESTED GIGP Funds Requested:
+//*************************************************************
+
+ElseIf  (as_type = "FR") Then
+	
+	SELECT	Sum(GA.ref_amt)	
+	INTO 		:ld_Amount
+	FROM 	gigp_amounts GA,   
+	         		gigp_reference GR  
+	WHERE 	GA.ref_code = GR.ref_code
+	AND		GR.category = 'projectFunding'
+	AND 		GA.ref_code = "GIGPFR"
+	AND 		GA.gigp_id = :al_gigpid;
+	
+//*************************************************************
+// RECOMMENDED GIGP Total Project Funding:
+//*************************************************************
+
+ElseIf  (as_type = "RECTPF") Then		
+	
+	SELECT	GR.category,
+		Sum(GA.approved_amt)	
+	INTO 		:ls_category,
+				:ld_Amount
+	FROM 	gigp_amounts GA,   
+	         		gigp_reference GR  
+	WHERE 	GA.ref_code = GR.ref_code
+	AND		GR.category = 'projectFunding'
+	AND 		GA.gigp_id = :al_gigpid
+	Group by GR.category;	
+		
+//*************************************************************
+//  RECOMMENDED GIGP Funds Requested:
+//*************************************************************
+
+ElseIf  (as_type = "RECFR") Then
+	
+	SELECT	Sum(GA.approved_amt)	
+	INTO 		:ld_Amount
+	FROM 	gigp_amounts GA,   
+	         		gigp_reference GR  
+	WHERE 	GA.ref_code = GR.ref_code
+	AND		GR.category = 'projectFunding'
+	AND 		GA.ref_code in ('GIGPFR','FUNDREALLOCATE','FUNDINCREASE')
+	AND 		GA.gigp_id = :al_gigpid;	
+	
+	
+//*************************************************************
+//  NEW NEW NWE RECOMMENDED GIGP Funds Requested (9/2024 per Brian McEvoy
+//*************************************************************
+ElseIf  (as_type = "RECFR NEW") Then
+	
+	SELECT	Sum(GA.approved_amt)	
+	INTO 		:ld_Amount
+	FROM 	gigp_amounts GA,   
+	         		gigp_reference GR  
+	WHERE 	GA.ref_code = GR.ref_code
+	AND		GR.category = 'projectFunding'
+	AND 		GA.ref_code in ('GIGPFR','FUNDINCREASE')
+	AND 		GA.gigp_id = :al_gigpid;	
+	
+		
+//*************************************************************
+// BUDGETED GIGP Total Budgeted Costs:
+//*************************************************************
+
+ElseIf  (as_type = "TBC") Then		
+	
+	SELECT	Sum(GA.ref_amt)	
+	INTO 		:ld_Amount
+	FROM 	gigp_amounts GA,   
+	         		gigp_reference GR  
+	WHERE 	GA.ref_code = GR.ref_code
+	AND		GR.category = 'budgetAmount'
+	AND 		GA.gigp_id = :al_gigpid;
+	
+	
+//*************************************************************
+// APPROVED GIGP Total Budgeted Costs:
+//*************************************************************
+
+ElseIf  (as_type = "APPRVTBC") Then		
+	
+	SELECT	Sum(GA.approved_amt)	
+	INTO 		:ld_Amount
+	FROM 	gigp_amounts GA,   
+	         		gigp_reference GR  
+	WHERE 	GA.ref_code = GR.ref_code
+	AND		GR.category = 'budgetAmount'
+	AND 		GA.gigp_id = :al_gigpid;	
+	
+		
+//*************************************************************
+// REQUESTED Other Funding Sources:
+//*************************************************************	
+	
+ElseIf  (as_type = "OTHFS") Then		
+	
+	SELECT	Sum(GA.approved_amt)		//SW, 11/2011
+//	SELECT	Sum(GA.ref_amt)	
+	INTO 		:ld_Amount
+	FROM 	gigp_amounts GA,   
+	         		gigp_reference GR  
+	WHERE 	GA.ref_code = :as_type
+	AND		GA.ref_code = GR.ref_code  //SW, 7/20/09
+	AND		GR.category = 'projectFunding'
+	AND 		GA.gigp_id = :al_gigpid;		
+		
+		
+//*************************************************************
+// REQUESTED Local Share (10% Match Minimum):
+//*************************************************************	
+	
+ElseIf  (as_type = "10MMN") Then		
+	
+//	SELECT	Sum(GA.approved_amt)		//SW, 11/2011
+////	SELECT	Sum(GA.ref_amt)	
+//	INTO 		:ld_Amount
+//	FROM 	gigp_amounts GA,   
+//	         		gigp_reference GR  
+//	WHERE 	GA.ref_code = :as_type
+//	AND		GA.ref_code = GR.ref_code
+//	AND		GR.category = 'projectFunding'
+//	AND 		GA.gigp_id = :al_gigpid;
+	
+	SELECT	Sum(GA.approved_amt)
+	INTO 		:ld_Amount
+	FROM 	gigp_amounts GA,   
+	         		gigp_reference GR  
+	WHERE 	GA.ref_code in ('FUNDLOCAL','FUNDPRIVATE','FUNDSTATE')
+	AND		GA.ref_code = GR.ref_code
+	AND		GR.category = 'projectFunding'
+	AND 		GA.gigp_id = :al_gigpid;
+
+		
+End if
+
+
+If IsNull(ld_Amount) Then ld_Amount = 0
+
+Return ld_Amount
+end function
+

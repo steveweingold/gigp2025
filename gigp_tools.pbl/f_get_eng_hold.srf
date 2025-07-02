@@ -1,0 +1,28 @@
+﻿global type f_get_eng_hold from function_object
+end type
+
+forward prototypes
+global function integer f_get_eng_hold (long al_profess_contract_id)
+end prototypes
+
+global function integer f_get_eng_hold (long al_profess_contract_id);integer li_ret
+long ll_count
+
+li_ret = 0
+
+If al_profess_contract_id > 0 Then
+	select count(*)
+	into :ll_count
+	from gigp_contract_eng_hold
+	where profess_contract_id = :al_profess_contract_id
+	and released_dt is null;
+	
+	If ll_count > 0 Then 
+		li_ret = 1
+	End If
+	
+End If
+
+Return li_ret
+end function
+

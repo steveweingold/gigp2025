@@ -1,0 +1,71 @@
+﻿global type f_calculate_wqv from function_object
+end type
+
+forward prototypes
+global function decimal f_calculate_wqv (long al_gigp, long al_design_calc_id, decimal ad_pval)
+end prototypes
+
+global function decimal f_calculate_wqv (long al_gigp, long al_design_calc_id, decimal ad_pval);string ls_practice
+decimal ld_wqv, ld_value, ld_p, ld_i, ld_a
+
+ld_wqv = 0
+
+select practice_type
+into :ls_practice
+from gigp_design_calcs
+where design_calc_id = :al_design_calc_id;
+
+Choose Case ls_practice
+			
+	Case 'DesCalcStreamLt', 'DesCalcWetland'
+		// TBD	
+			
+	Case 'DesCalcStormHar'
+		// N/A so return 0 for now
+			
+	Case Else
+		ld_p = 0
+		ld_i = 0
+		ld_a = 0
+		
+		//Get the P value from Project Metrics tab (or passed in if editing the Metrics tab)
+		If ad_pval > 0 Then
+			ld_p = ad_pval
+		Else
+			select metric_value
+			into :ld_p
+			from gigp_project_metrics
+			where gigp_id = :al_gigp
+			and ref_code = 'PINCHES';
+		End If
+		
+		If IsNull(ld_p) Then ld_p = 0
+		
+		//Get the Percent Impervious
+		select metric_value
+		into :ld_i
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code in ('DCMBR9','DCMBS9','DCMPP9','DCMRG9');
+		
+		If IsNull(ld_i) Then ld_i = 0
+		ld_i = Round(ld_i,0)
+		
+		select metric_value
+		into :ld_a
+		from gigp_project_metrics
+		where design_calc_id = :al_design_calc_id
+		and ref_code in ('DCMBR7','DCMBS7','DCMPP8','DCMRG7');
+		
+		If IsNull(ld_a) Then ld_a = 0
+		ld_a = ld_a * 43560	//convert to sqft
+		
+		ld_wqv = ((ld_p) * (0.05 + (0.009 * ld_i)) * (ld_a)) / 12
+			
+End Choose
+
+
+Return Round(ld_wqv,2)
+
+end function
+

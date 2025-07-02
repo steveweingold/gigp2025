@@ -1,0 +1,6 @@
+﻿global type str_disbursementparms from structure
+	long		str_disbursementid
+	long		str_gigpid
+	string		str_access
+end type
+

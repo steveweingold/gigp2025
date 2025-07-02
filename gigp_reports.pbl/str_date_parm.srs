@@ -1,0 +1,7 @@
+﻿global type str_date_parm from structure
+	string		str_dateLabel1
+	datetime		str_dateValue1
+	string		str_dateLabel2
+	datetime		str_dateValue2
+end type
+

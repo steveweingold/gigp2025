@@ -1,0 +1,27 @@
+﻿global type f_get_applicant_name from function_object
+end type
+
+forward prototypes
+global function string f_get_applicant_name (long al_gigpid)
+end prototypes
+
+global function string f_get_applicant_name (long al_gigpid);
+String ls_value
+
+
+SELECT	C.organization
+INTO		:ls_value
+FROM		gigp_contacts C,   
+         		gigp_contact_links CL  
+WHERE 	C.contact_id = CL.contact_id    
+AND		CL.gigp_id = :al_gigpID
+AND      	CL.contact_type = "APP";
+
+
+
+
+
+
+Return ls_value
+end function
+

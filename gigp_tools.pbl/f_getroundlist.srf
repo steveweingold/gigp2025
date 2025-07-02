@@ -1,0 +1,17 @@
+﻿global type f_getroundlist from function_object
+end type
+
+forward prototypes
+global function string f_getroundlist (string as_round)
+end prototypes
+
+global function string f_getroundlist (string as_round);string ls_return
+n_cst_string ln_string
+
+ls_return = as_round
+
+ls_return = ln_string.of_globalreplace(ls_return, ' ', ',')
+
+Return ls_return
+end function
+

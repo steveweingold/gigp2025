@@ -1,0 +1,6 @@
+﻿global type str_notes from structure
+	string		str_action
+	string		str_text
+	integer		str_limit
+end type
+

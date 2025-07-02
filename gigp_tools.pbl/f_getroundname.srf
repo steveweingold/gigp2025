@@ -1,0 +1,21 @@
+﻿global type f_getroundname from function_object
+end type
+
+forward prototypes
+global function string f_getroundname (integer ai_round)
+end prototypes
+
+global function string f_getroundname (integer ai_round);string ls_name, ls_round
+
+ls_round = String(ai_round)
+
+select description
+into :ls_name
+from gigp_reference
+where category = 'Application' 
+and sub_category = 'Round Number'
+and ref_code = :ls_round;
+
+Return ls_name
+end function
+

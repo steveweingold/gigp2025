@@ -1,0 +1,45 @@
+﻿global type f_calculate_total_wqv from function_object
+end type
+
+forward prototypes
+global function decimal f_calculate_total_wqv (long al_gigp, decimal ad_pval)
+end prototypes
+
+global function decimal f_calculate_total_wqv (long al_gigp, decimal ad_pval);string ls_syntax, error_syntaxfromSQL, errorCreate
+long ll_ret, ll_row, ll_practice
+decimal ld_total_wqv, ld_practice_wqv, ld_p
+n_ds lds_data
+
+ld_total_wqv = 0
+
+If ad_pval > 0 Then
+	ld_p = ad_pval
+Else
+	ld_p = 0
+End If
+
+//Loop through all design calc practices for the GIGP Id and sum the individual WQv values
+ls_syntax = sqlca.SyntaxFromSQL('select * from gigp_design_calcs where gigp_id = ' + String(al_gigp), 'Style(Type=Form)', error_syntaxfromSQL)
+lds_data = CREATE n_ds
+lds_data.CREATE(ls_syntax, errorCreate)
+lds_data.SetTransObject(SQLCA)
+
+ll_ret = lds_data.Retrieve(al_gigp)
+
+For ll_row = 1 to ll_ret
+	ll_practice = lds_data.GetItemNumber(ll_row, 'design_calc_id')
+	
+	ld_practice_wqv = f_calculate_wqv(al_gigp, ll_practice, ld_p)
+	
+	If ld_practice_wqv > 0 Then
+		ld_total_wqv += ld_practice_wqv
+	End If
+	
+Next
+
+//convert to cubic feet from gallons
+ld_total_wqv = Round(ld_total_wqv / 7.5, 2)
+
+Return ld_total_wqv
+end function
+

@@ -1,0 +1,70 @@
+﻿global type f_get_doc_coll_status from function_object
+end type
+
+forward prototypes
+global function string f_get_doc_coll_status (long al_gigpid)
+end prototypes
+
+global function string f_get_doc_coll_status (long al_gigpid);string	ls_Project_No
+int		li_Count
+
+// If no eng_contract.doc_coll_requested_dt on any related eng_contract is entered, status is blank.
+// If eng_contract.doc_coll_requested_dt on any related eng_contract is entered, status is Pending.
+//		Unless all related eng_site_visit.efc_letter_sent_dt are not null, in which case status is Approved.
+
+// Is there a project no for this application?
+select project_no
+into	:ls_Project_No
+from	gigp_application
+where	gigp_id = :al_gigpid;
+
+if isnull(ls_Project_No) or trim(ls_Project_No) = "" or ls_Project_No = "NONE" then
+	return ""
+end if
+
+//ls_Project_No = mid(ls_Project_No,4)  **Commented out by SW, 1/2021 after making project numbers consistent
+
+// Are there any contracts with a doc_coll_requested_dt in eng_contracts for this project no?
+select count(*)
+into :li_count
+from ProjectPhase p, Contract c, ContractDocumentCollection dc, ContractProjectPhase cpp
+where p.ProjectNumber = :ls_Project_No
+and p.ProjectPhaseId = cpp.ProjectPhaseId
+and cpp.ContractId = c.ContractId
+and c.ContractId = dc.ContractId
+and dc.RequestedDate is not null;
+	
+if li_Count = 0 then
+	return ""
+end if
+
+// Are there any contracts with a doc_coll_requested_dt in eng_contracts for this project no that have not had the EFC Letter Sent entered?
+//Updated by Ryan, 10/2024 to use Compplete Checkbox
+//select count(*)
+//into :li_count
+//from ProjectPhase p, Contract c, ContractDocumentCollection dc, ContractProjectPhase cpp
+//where p.ProjectNumber = :ls_Project_No
+//and p.ProjectPhaseId = cpp.ProjectPhaseId
+//and cpp.ContractId = c.ContractId
+//and c.ContractId = dc.ContractId
+//and dc.RequestedDate is not null
+//and dc.EfcLetterSentDate is null;
+
+select count(*)
+into :li_count
+from ProjectPhase p, Contract c, ContractDocumentCollection dc, ContractProjectPhase cpp
+where p.ProjectNumber = :ls_Project_No
+and p.ProjectPhaseId = cpp.ProjectPhaseId
+and cpp.ContractId = c.ContractId
+and c.ContractId = dc.ContractId
+and dc.RequestedDate is not null
+and dc.Completed = 0;
+
+if li_count > 0 then
+	return "Pending"
+else
+	return "Approved"
+end if
+
+end function
+

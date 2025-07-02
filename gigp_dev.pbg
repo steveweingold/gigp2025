@@ -1,0 +1,7 @@
+Save Format v3.0(19990112)
+@begin Libraries
+ "gigp_dev.pbl" "";
+@end;
+@begin Objects
+ "d_contactsenate.srd" "gigp_dev.pbl";
+@end;

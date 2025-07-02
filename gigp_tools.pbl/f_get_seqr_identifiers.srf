@@ -1,0 +1,57 @@
+﻿global type f_get_seqr_identifiers from function_object
+end type
+
+forward prototypes
+global function string f_get_seqr_identifiers (long al_gigpid)
+end prototypes
+
+global function string f_get_seqr_identifiers (long al_gigpid);
+String 	ls_value1, ls_value2, ls_subcat
+Integer 	li_count, li_sort
+
+//*************************************************************
+// SEQR Identifiers:
+//*************************************************************
+
+DECLARE c123seqrIDENT CURSOR FOR
+		SELECT	R.description, R.sub_category, R.sort_order
+		FROM 	gigp_checklist C,   
+					gigp_reference R 
+		WHERE 	C.ref_code = R.ref_code
+		AND        R.category = 'checkListItem'
+		AND        R.sub_category = 'projectType'
+		AND		C.checklist_value = 1
+		AND        C.gigp_id = :al_gigpid
+		ORDER BY	R.sub_category ASC,   
+						R.sort_order ASC   ;		
+		
+	
+OPEN c123seqrIDENT;
+	
+FETCH c123seqrIDENT INTO :ls_value1, :ls_subcat, :li_sort;
+
+DO WHILE SQLCA.sqlcode = 0
+	
+	If (Len(ls_value2) < 1) Then
+		ls_value2 = ls_value1
+	Else
+		ls_value2 += (", " + ls_value1)
+	End If
+								
+	FETCH c123seqrIDENT INTO :ls_value1, :ls_subcat, :li_sort;
+	
+LOOP
+	
+CLOSE c123seqrIDENT;			
+
+
+If Len(ls_value2) < 1 Then ls_value2 = ""
+
+Return ls_value2
+
+
+
+
+
+end function
+

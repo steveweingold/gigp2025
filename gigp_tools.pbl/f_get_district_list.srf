@@ -1,0 +1,33 @@
+﻿global type f_get_district_list from function_object
+end type
+
+forward prototypes
+global function string f_get_district_list (long al_gigpid, string as_type)
+end prototypes
+
+global function string f_get_district_list (long al_gigpid, string as_type);string ls_dis
+long ll_row, ll_count
+datastore lds_data
+
+If NOT IsValid(lds_data) Then lds_data = CREATE Datastore
+
+lds_data.DataObject = 'd_list_political_districts'
+lds_data.SetTransObject(SQLCA)
+
+ll_count = lds_data.Retrieve(al_gigpid, as_type)
+
+If ll_count > 0 Then
+	For ll_row = 1 to ll_count
+		If ll_row = 1 Then
+			ls_dis = String(lds_data.GetItemNumber(ll_row, 'district_no'))
+		Else
+			ls_dis += ',' + String(lds_data.GetItemNumber(ll_row, 'district_no'))
+		End If
+	Next
+End If
+
+If IsValid(lds_data) Then DESTROY lds_data
+
+Return ls_dis
+end function
+

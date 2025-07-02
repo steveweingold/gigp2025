@@ -1,0 +1,37 @@
+﻿global type f_getredc from function_object
+end type
+
+forward prototypes
+global function string f_getredc (long al_gigp)
+end prototypes
+
+global function string f_getredc (long al_gigp);string ls_redc
+long ll_cfa
+Integer li_round
+
+If IsNull(al_gigp) or al_gigp <= 0 Then Return ''
+
+select redc_region
+into :ls_redc
+from gigp_application
+where gigp_id = :al_gigp;
+
+//select cfa_no, round_no
+//into :ll_cfa, :li_round
+//from gigp_application
+//where gigp_id = :al_gigp;
+//
+//If ll_cfa > 0 Then
+//	select answer
+//	into :ls_redc
+//	from gigp_cfa_raw_data
+//	where app_id = :ll_cfa
+//	and round_no = :li_round
+//	and question_id = 548;
+//	
+//End If
+
+
+Return Trim(ls_redc)
+end function
+

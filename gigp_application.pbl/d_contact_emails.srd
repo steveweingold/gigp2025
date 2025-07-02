@@ -1,0 +1,46 @@
+﻿release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=136 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=84 color="536870912" )
+table(column=(type=long updatewhereclause=yes name=gigp_application_gigp_id dbname="gigp_application.gigp_id" )
+ column=(type=char(30) updatewhereclause=yes name=gigp_contacts_first_name dbname="gigp_contacts.first_name" )
+ column=(type=char(30) updatewhereclause=yes name=gigp_contacts_last_name dbname="gigp_contacts.last_name" )
+ column=(type=char(1) updatewhereclause=yes name=gigp_contacts_mid_initial dbname="gigp_contacts.mid_initial" )
+ column=(type=char(35) updatewhereclause=yes name=gigp_contacts_salutation_name dbname="gigp_contacts.salutation_name" )
+ column=(type=char(65) updatewhereclause=yes name=gigp_contacts_organization dbname="gigp_contacts.organization" )
+ column=(type=char(40) updatewhereclause=yes name=gigp_contacts_email dbname="gigp_contacts.email" )
+ retrieve="PBSELECT( VERSION(400) DISTINCT ()TABLE(NAME=~"dbo.gigp_application~" )  TABLE(NAME=~"dbo.gigp_contact_links~" )  TABLE(NAME=~"dbo.gigp_contacts~" ) COLUMN(NAME=~"dbo.gigp_application.gigp_id~") COLUMN(NAME=~"dbo.gigp_contacts.first_name~") COLUMN(NAME=~"dbo.gigp_contacts.last_name~") COLUMN(NAME=~"dbo.gigp_contacts.mid_initial~") COLUMN(NAME=~"dbo.gigp_contacts.salutation_name~") COLUMN(NAME=~"dbo.gigp_contacts.organization~") COLUMN(NAME=~"dbo.gigp_contacts.email~")    JOIN (LEFT=~"dbo.gigp_application.gigp_id~"    OP =~"=~"RIGHT=~"dbo.gigp_contact_links.gigp_id~" )    JOIN (LEFT=~"dbo.gigp_contact_links.contact_id~"    OP =~"=~"RIGHT=~"dbo.gigp_contacts.contact_id~" )WHERE(    EXP1 =~"dbo.gigp_application.funding_recommendation~"   OP =~"=~"    EXP2 =~"'RECC-H'~"    LOGIC =~"and~" ) WHERE(    EXP1 =~"dbo.gigp_contacts.email~"   OP =~"<>~"    EXP2 =~"null~" ) ) ORDER(NAME=~"dbo.gigp_application.gigp_id~" ASC=yes )  ORDER(NAME=~"dbo.gigp_contact_links.contact_id~" ASC=yes ) " )
+text(band=header alignment="2" text="Gigp Application
+Gigp Id" border="2" color="33554432" x="5" y="4" height="56" width="434" html.valueishtml="0"  name=gigp_application_gigp_id_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Gigp Contacts
+First Name" border="2" color="33554432" x="443" y="4" height="56" width="850" html.valueishtml="0"  name=gigp_contacts_first_name_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Gigp Contacts
+Last Name" border="2" color="33554432" x="1298" y="4" height="56" width="850" html.valueishtml="0"  name=gigp_contacts_last_name_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Gigp Contacts
+Mid Initial" border="2" color="33554432" x="2153" y="4" height="56" width="379" html.valueishtml="0"  name=gigp_contacts_mid_initial_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Gigp Contacts
+Salutation Name" border="2" color="33554432" x="2537" y="4" height="56" width="987" html.valueishtml="0"  name=gigp_contacts_salutation_name_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Gigp Contacts
+Organization" border="2" color="33554432" x="3529" y="4" height="56" width="1810" html.valueishtml="0"  name=gigp_contacts_organization_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Gigp Contacts
+Email" border="2" color="33554432" x="5344" y="4" height="56" width="1125" html.valueishtml="0"  name=gigp_contacts_email_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="1" tabsequence=32766 border="2" color="33554432" x="5" y="4" height="56" width="329" format="[general]" html.valueishtml="0"  name=gigp_application_gigp_id visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="2" color="33554432" x="443" y="4" height="56" width="850" format="[general]" html.valueishtml="0"  name=gigp_contacts_first_name visible="1" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="2" color="33554432" x="1298" y="4" height="56" width="850" format="[general]" html.valueishtml="0"  name=gigp_contacts_last_name visible="1" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="2" color="33554432" x="2153" y="4" height="56" width="55" format="[general]" html.valueishtml="0"  name=gigp_contacts_mid_initial visible="1" edit.limit=1 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="2" color="33554432" x="2537" y="4" height="56" width="987" format="[general]" html.valueishtml="0"  name=gigp_contacts_salutation_name visible="1" edit.limit=35 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="2" color="33554432" x="3529" y="4" height="56" width="1810" format="[general]" html.valueishtml="0"  name=gigp_contacts_organization visible="1" edit.limit=65 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="2" color="33554432" x="5344" y="4" height="56" width="1125" format="[general]" html.valueishtml="0"  name=gigp_contacts_email visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

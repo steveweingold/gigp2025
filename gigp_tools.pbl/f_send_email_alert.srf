@@ -1,0 +1,30 @@
+﻿global type f_send_email_alert from function_object
+end type
+
+forward prototypes
+global subroutine f_send_email_alert (string as_subject, string as_message, string as_sendto)
+end prototypes
+
+global subroutine f_send_email_alert (string as_subject, string as_message, string as_sendto);n_cst_gwsend lnvo_gwsend
+string ls_subject
+
+ //***************************************************************
+// Send email ALERT notification :
+//***************************************************************
+If NOT gb_production Then 	
+	ls_subject = as_subject + " (This is a Test ... Disregard!)"
+Else
+	ls_subject = as_subject
+End If
+
+If as_sendto = '' or IsNull(as_sendto) Then
+	as_sendto = 'BatchJob-Notify'
+End If
+
+lnvo_gwsend.of_Reset()
+lnvo_gwsend.of_AddRecipient(as_sendto)
+lnvo_gwsend.of_SetSubject(ls_subject)
+lnvo_gwsend.of_SetMessage(as_Message)
+lnvo_gwsend.of_SendMail()
+end subroutine
+

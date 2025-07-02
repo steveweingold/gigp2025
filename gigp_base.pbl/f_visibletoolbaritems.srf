@@ -1,0 +1,57 @@
+﻿//objectcomments Returns number of visible toolbaritems in menu passed in.
+global type f_visibletoolbaritems from function_object
+end type
+
+forward prototypes
+global function integer f_visibletoolbaritems (menu am_menu)
+end prototypes
+
+global function integer f_visibletoolbaritems (menu am_menu);//////////////////////////////////////////////////////////////////////////
+//	Modification Log																		//
+//////////////////////////////////////////////////////////////////////////
+//	Date of Change		Developer		Change Description						//
+//	--------------		---------		------------------						//
+//																								//
+//////////////////////////////////////////////////////////////////////////
+
+int	li_Item_Count, &
+		li_Total_Count, &
+		li_Index
+
+//////////////////////////////////////////////////////////////////////////
+// A menu has an array called Item[] that holds all of the menu items	//
+// in the level directly below it. Each of these menu items can be		//
+// considered as a menu itself, because they each contain their own		//
+// Item[] array.																			//
+//																								//
+// Because of this, you can tell when you are at a final menu item that	//
+// will trigger off some processing when you find a menu item that has	//
+// no elements in it's Item[] array.												//
+//																								//
+// This function will call itself recursively until it finds all of the	//
+// "final" menu items.																	//
+//////////////////////////////////////////////////////////////////////////
+
+// How many items are in the item[] array for the menu/menu item passed in?	//
+li_Item_Count = UpperBound(am_Menu.Item[])
+
+// If li_Item_Count > 0 then we do not have a "final" menu item and		//
+// we need to call this function for each element in the item[] array.	//
+IF li_Item_Count > 0 THEN
+	FOR li_Index = 1 TO li_Item_Count
+		li_Total_Count += f_visibletoolbaritems(am_Menu.Item[li_Index])
+	NEXT
+ELSE
+	// Even though an item is marked as visible, it won't really be	//
+	// visible unless ToolBarItemName is also specified.					//
+	IF am_Menu.ToolbarItemVisible AND am_Menu.ToolBarItemName <> "" THEN
+		Return 1
+	ELSE
+		Return 0
+	END IF
+END IF
+
+Return li_Total_Count
+
+end function
+

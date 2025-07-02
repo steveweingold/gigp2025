@@ -1,0 +1,19 @@
+Save Format v3.0(19990112)
+@begin Libraries
+ "pfcmsg.pbl" "";
+@end;
+@begin Objects
+ "w_splash.srw" "pfcmsg.pbl";
+ "n_cst_msgs_manager.sru" "pfcmsg.pbl";
+ "d_tb_messages.srd" "pfcmsg.pbl";
+ "m_msgs_frame.srm" "pfcmsg.pbl";
+ "m_msgs_sheet.srm" "pfcmsg.pbl";
+ "proj_pfcmsg.srj" "pfcmsg.pbl";
+ "d_dddw_icons.srd" "pfcmsg.pbl";
+ "d_messages.srd" "pfcmsg.pbl";
+ "w_msgs_frame.srw" "pfcmsg.pbl";
+ "w_msgs_sheet.srw" "pfcmsg.pbl";
+ "w_msgs_login.srw" "pfcmsg.pbl";
+ "s_copystruct.srs" "pfcmsg.pbl";
+ "pfcmsg.sra" "pfcmsg.pbl";
+@end;
