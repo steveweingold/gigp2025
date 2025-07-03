@@ -11,7 +11,7 @@ global type w_production_warning from window
 integer width = 2167
 integer height = 644
 boolean titlebar = true
-string title = "WARNING!"
+string title = "WARNING"
 boolean controlmenu = true
 boolean minbox = true
 windowtype windowtype = popup!
